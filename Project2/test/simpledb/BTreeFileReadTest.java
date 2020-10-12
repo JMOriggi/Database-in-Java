@@ -85,8 +85,7 @@ public class BTreeFileReadTest extends SimpleDbTestBase {
 
 	@Test
 	public void testIteratorBasic() throws Exception {
-		BTreeFile smallFile = BTreeUtility.createRandomBTreeFile(2, 3, null,
-				null, 0);
+		BTreeFile smallFile = BTreeUtility.createRandomBTreeFile(2, 3, null,null, 0);
 
 		DbFileIterator it = smallFile.iterator(tid);
 		// Not open yet
@@ -134,8 +133,7 @@ public class BTreeFileReadTest extends SimpleDbTestBase {
 	 * Unit test for BTreeFile.indexIterator()
 	 */
 	@Test public void indexIterator() throws Exception {
-		BTreeFile twoLeafPageFile = BTreeUtility.createBTreeFile(2, 520,
-				null, null, 0);
+		BTreeFile twoLeafPageFile = BTreeUtility.createBTreeFile(2, 520,null, null, 0);
 		Field f =  new IntField(5);
 
 		// greater than

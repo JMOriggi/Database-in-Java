@@ -192,29 +192,32 @@ public class BTreeFile implements DbFile {
 	 * @return the left-most leaf page possibly containing the key field f
 	 * 
 	 */
-	private BTreeLeafPage findLeafPage(TransactionId tid, HashMap<PageId, Page> dirtypages, BTreePageId pid, Permissions perm,
-			Field f) throws DbException, TransactionAbortedException {
+	private BTreeLeafPage findLeafPage(TransactionId tid, HashMap<PageId, Page> dirtypages, BTreePageId pid, Permissions perm, Field f) throws DbException, TransactionAbortedException {
 		// some code goes here
+		// The given page can be of 2 main type LEAF or INTERNAL.
+		// The method is recursive. This means that it will call itself until it found a LEAF page
+		// The LEAF or INTERNAL page are linked by an iterator to other page of the same level group
 		if(pid.pgcateg() == BTreePageId.LEAF){
-			// I found the leaf page I wanted (remember that the BTree is only for BP use)
+			// I found the leaf page I wanted
 			return (BTreeLeafPage)(this.getPage(tid, dirtypages, pid, perm));
 		}else if(pid.pgcateg() == BTreePageId.INTERNAL){
-			// Get the page from BP to then use the iterator I need
+			// Get the page from BP to then use the internal page iterator I need to switch page
 			BTreeInternalPage pg = (BTreeInternalPage)(this.getPage(tid, dirtypages, pid, Permissions.READ_ONLY));
 			Iterator<BTreeEntry> es = pg.iterator();
+			BTreeEntry e = es.next();
 			if (f == null) {
 				// If the provided value is null, just bypass the rules and take the page to the deepest page in the left
-				return findLeafPage(tid, dirtypages, es.next().getLeftChild(), perm, f);
+				// getLeftChild return the pid of the child element
+				return findLeafPage(tid, dirtypages, e.getLeftChild(), perm, f);
 			}
-			BTreeEntry e = es.next();
 			while (true) {
 				if (e.getKey().compare(Op.LESS_THAN_OR_EQ, f)) {
 					// If less take the child element
 					return findLeafPage(tid, dirtypages, e.getLeftChild(), perm, f);
 				}else if (es.hasNext()) {
-					// If greater and has a next element go check the next element
+					// If greater and has a next element, take the next element and check the rules
 					e = es.next();
-					return findLeafPage(tid, dirtypages, e.getRightChild(), perm, f);
+					continue;
 				}else {
 					// If greater and no next element go to the child
 					return findLeafPage(tid, dirtypages, e.getRightChild(), perm, f);
@@ -1238,8 +1241,7 @@ class BTreeFileIterator extends AbstractDbFileIterator {
 	 * Open this iterator by getting an iterator on the first leaf page
 	 */
 	public void open() throws DbException, TransactionAbortedException {
-		BTreeRootPtrPage rootPtr = (BTreeRootPtrPage) Database.getBufferPool().getPage(
-				tid, BTreeRootPtrPage.getId(f.getId()), Permissions.READ_ONLY);
+		BTreeRootPtrPage rootPtr = (BTreeRootPtrPage) Database.getBufferPool().getPage(tid, BTreeRootPtrPage.getId(f.getId()), Permissions.READ_ONLY);
 		BTreePageId root = rootPtr.getRootId();
 		curp = f.findLeafPage(tid, root, Permissions.READ_ONLY, null);
 		it = curp.iterator();
@@ -1357,8 +1359,7 @@ class BTreeSearchIterator extends AbstractDbFileIterator {
 					// hit the end
 					return null;
 				}
-				else if(ipred.getOp() == Op.EQUALS && 
-						t.getField(f.keyField()).compare(Op.GREATER_THAN, ipred.getField())) {
+				else if(ipred.getOp() == Op.EQUALS && t.getField(f.keyField()).compare(Op.GREATER_THAN, ipred.getField())) {
 					// if the tuple is now greater than the field passed in and the operation
 					// is equals, we have reached the end
 					return null;

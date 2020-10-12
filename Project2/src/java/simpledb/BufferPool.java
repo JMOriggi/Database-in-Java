@@ -29,7 +29,7 @@ public class BufferPool {
     public static final int DEFAULT_PAGES = 50;
 
     //Map pages on the buffer
-    private HashMap<PageId, Page> bufferPages;
+    private ConcurrentHashMap<PageId, Page> bufferPages;
     //Max number of pages
     private static int maxNumPages = DEFAULT_PAGES;
 
@@ -41,7 +41,7 @@ public class BufferPool {
     public BufferPool(int numPages) {
         // some code goes here
         //Create new hashmap with capacity numPages
-        bufferPages = new HashMap<>(numPages);
+        bufferPages = new ConcurrentHashMap<>(numPages);
         this.maxNumPages = numPages; //update max num page value
     }
     
@@ -82,21 +82,13 @@ public class BufferPool {
             return bufferPages.get(pid);
         }else{
             //if not present retrieve the page from db
-            HeapFile file = (HeapFile) Database.getCatalog().getDatabaseFile(pid.getTableId());
-            HeapPage newPage = (HeapPage) file.readPage(pid);
-            if(bufferPages.size() < maxNumPages){
-                //if enough space add page and return
-                bufferPages.put(pid, newPage);
-                return newPage;
-            }else{
-                //if not enough space delete page, add new and return
-                //remove the first of the list
-                PageId remId = bufferPages.entrySet().iterator().next().getKey();
-                bufferPages.remove(remId);
-                bufferPages.put(pid, newPage);
-                return newPage;
+            Page newPage = Database.getCatalog().getDatabaseFile(pid.getTableId()).readPage(pid);
+            if(bufferPages.size() >= maxNumPages){
+                //if not enough space, first delete page following a eviction policy
+                evictPage();
             }
-
+            bufferPages.put(pid, newPage);
+            return newPage;
         }
     }
 
@@ -163,15 +155,17 @@ public class BufferPool {
         throws DbException, IOException, TransactionAbortedException {
         // some code goes here
         // not necessary for lab1
-        DbFile f = Database.getCatalog().getDatabaseFile(tableId);
+        /*DbFile f = Database.getCatalog().getDatabaseFile(tableId);
         ArrayList<Page> dpList = f.insertTuple(tid, t);
         // Now let's insert all dirty pages back to BufferPool
         for (Page p : dpList) {
             PageId pid = p.getId();
-            if (!bufferPages.containsKey(pid) && bufferPages.size() == maxNumPages) evictPage();
+            if (!bufferPages.containsKey(pid) && bufferPages.size() == maxNumPages){
+                evictPage();
+            }
             bufferPages.put(pid, p);
             bufferPages.get(pid).markDirty(true, tid);
-        }
+        }*/
     }
 
     /**
@@ -191,14 +185,14 @@ public class BufferPool {
         throws DbException, IOException, TransactionAbortedException {
         // some code goes here
         // not necessary for lab1
-        DbFile f = Database.getCatalog().getDatabaseFile(t.getRecordId().getPageId().getTableId());
+        /*DbFile f = Database.getCatalog().getDatabaseFile(t.getRecordId().getPageId().getTableId());
         ArrayList<Page> dpList = f.deleteTuple(tid, t);
         for (Page p : dpList) {
             PageId pid = p.getId();
             if (!bufferPages.containsKey(pid) && bufferPages.size() == maxNumPages) evictPage();
             bufferPages.put(pid, p);
             bufferPages.get(pid).markDirty(true, tid);
-        }
+        }*/
     }
 
     /**
@@ -209,6 +203,7 @@ public class BufferPool {
     public synchronized void flushAllPages() throws IOException {
         // some code goes here
         // not necessary for lab1
+        // For each page in the buffer pool call the flush page, to check if there aìis any page to update to the disk
         for (PageId pid : bufferPages.keySet()) {
             flushPage(pid);
         }
@@ -235,11 +230,12 @@ public class BufferPool {
     private synchronized  void flushPage(PageId pid) throws IOException {
         // some code goes here
         // not necessary for lab1
+        // For the given page id check if the page is dirty, if yes update the disk and mark as not dirty (no deletion from BP!!!)
         Page p = bufferPages.get(pid);
-        if (p != null && p.isDirty() != null) {
+        if (p != null && p.isDirty() != null ) {
+            // If dirty I need to write it back to the file and mark as not dirty anymore
             Database.getCatalog().getDatabaseFile(pid.getTableId()).writePage(p);
             p.markDirty(false, null);
-            p.setBeforeImage();
         }
     }
 
@@ -254,24 +250,18 @@ public class BufferPool {
      * Discards a page from the buffer pool.
      * Flushes the page to disk to ensure dirty pages are updated on disk.
      */
-    private synchronized  void evictPage() throws DbException {
+    private synchronized  void evictPage() throws DbException{
         // some code goes here
         // not necessary for lab1
-        ArrayList<PageId> cleanPages = new ArrayList<PageId>();
-        for (PageId pid : bufferPages.keySet()) {
-            if (bufferPages.get(pid).isDirty() == null) {
-                cleanPages.add(pid);
-            }
-        }
-        if (cleanPages.size() == 0) throw new DbException("No clean pages to evict!");
-        PageId vic = cleanPages.get((int) Math.floor(Math.random() * cleanPages.size()));
+        // Only method that delete pages from BP. Before deleting it it flush the page to the Disk if dirty
+        // For now randomly select the first page of the list
+        PageId remId = bufferPages.entrySet().iterator().next().getKey();
         try {
-            assert bufferPages.get(vic).isDirty() == null : "Evict a dirty page!";
-            flushPage(vic);
-        } catch (Exception e) {
+            flushPage(remId);
+            discardPage(remId);
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        bufferPages.remove(vic);
     }
 
 }
