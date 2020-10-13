@@ -278,35 +278,45 @@ public class BTreeFile implements DbFile {
 		// the new entry.  getParentWithEmtpySlots() will be useful here.  Don't forget to update
 		// the sibling pointers of all the affected leaf pages.  Return the page into which a 
 		// tuple with the given key field should be inserted.
-		BTreeLeafPage npage = (BTreeLeafPage)getEmptyPage(tid, dirtypages, BTreePageId.LEAF);
-		Iterator<Tuple> ts = page.iterator();
-		if (ts == null || !ts.hasNext()) throw new DbException("Illegal tuple iterator.");
+
+		//Take a new page that will be put to the right of the existing one we are splitting
+		BTreeLeafPage newPage = (BTreeLeafPage)getEmptyPage(tid, dirtypages, BTreePageId.LEAF);
+		//Take tuple iterator for the current page we are splitting
+		Iterator<Tuple> CurrentPageTupleIt = page.iterator();
 		// Move (left half) tuples to the new leaf page
 		int numTs = page.getNumTuples();
 		for (int j = 0; j < numTs / 2; j ++) {
-			if (!ts.hasNext()) throw new DbException("No more tuples.");
-			Tuple t = ts.next();
+			Tuple t = CurrentPageTupleIt.next();
+			newPage.insertTuple(t);
 			page.deleteTuple(t);
-			npage.insertTuple(t);
 		}
-		// Set sibling poiters
+		//SET ALL THE CONNECTION BETWEEN LEAF PAGES
+		// if the original page had a left neighbor, set this neighbor to point to the new page instead
+		// (because new page has all the left side elements)
 		if (page.getLeftSiblingId() != null) {
 			BTreeLeafPage neighbor = (BTreeLeafPage)getPage(tid, dirtypages, page.getLeftSiblingId(), Permissions.READ_WRITE);
-			neighbor.setRightSiblingId(npage.getId());
+			neighbor.setRightSiblingId(newPage.getId());
 		}
-		npage.setLeftSiblingId(page.getLeftSiblingId());
-		npage.setRightSiblingId(page.getId());
-		page.setLeftSiblingId(npage.getId());
+		//Now set the pointers on new page and current page
+		//left pointers of new page is the old left sibling of current page
+		newPage.setLeftSiblingId(page.getLeftSiblingId());
+		//right pointers of new page is the current page
+		newPage.setRightSiblingId(page.getId());
+		//left pointers of curent page is the new page
+		page.setLeftSiblingId(newPage.getId());
+
+
 		// Set the entry (and field) that should be inserted to their parent
-		Field f = ts.next().getField(keyField);
-		BTreeEntry e = new BTreeEntry(f, npage.getId(), page.getId());
-		// Handle the parent
-		BTreeInternalPage parent = getParentWithEmptySlots(tid, dirtypages, page.getParentId(), f);
+		// Remember leaf page don't have BTreeEntry logic
+		// For this reason we take the key of the designed tuple and create with it a new Btree entry to pass to the parent
+		Field f = CurrentPageTupleIt.next().getField(keyField); // .next sufficient to get the middle because before in the loop I stopped before the middle
+		BTreeEntry e = new BTreeEntry(f, newPage.getId(), page.getId());
+		BTreeInternalPage parent = getParentWithEmptySlots(tid, dirtypages, page.getParentId(), f); // This function maybe will create a splitting in the parent page (if full)
 		// Link the (probably new) parent and the leaf nodes
 		parent.insertEntry(e);
 		updateParentPointers(tid, dirtypages, parent);
 		// Compare the input field with the new field in parent
-		return (f.compare(Op.GREATER_THAN_OR_EQ, field)) ? npage : page;
+		return (f.compare(Op.GREATER_THAN_OR_EQ, field)) ? newPage : page;
 		
 	}
 	
