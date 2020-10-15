@@ -236,8 +236,7 @@ public class BTreeFileEncoder {
 		ArrayList<ArrayList<BTreeEntry>> entries = new ArrayList<ArrayList<BTreeEntry>>();
 
 		// first add some bytes for the root pointer page
-		bf.writePage(new BTreeRootPtrPage(BTreeRootPtrPage.getId(tableid), 
-				BTreeRootPtrPage.createEmptyPageData()));
+		bf.writePage(new BTreeRootPtrPage(BTreeRootPtrPage.getId(tableid), BTreeRootPtrPage.createEmptyPageData()));
 
 		// next iterate through all the tuples and write out leaf pages
 		// and internal pages as they fill up.

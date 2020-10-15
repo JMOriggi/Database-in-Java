@@ -155,17 +155,19 @@ public class BufferPool {
         throws DbException, IOException, TransactionAbortedException {
         // some code goes here
         // not necessary for lab1
-        /*DbFile f = Database.getCatalog().getDatabaseFile(tableId);
-        ArrayList<Page> dpList = f.insertTuple(tid, t);
-        // Now let's insert all dirty pages back to BufferPool
-        for (Page p : dpList) {
+        // add tuple from table (the method returns a list of the modified pages)
+        ArrayList<Page> updatedPagesList = Database.getCatalog().getDatabaseFile(tableId).insertTuple(tid, t);
+        // Update BP wth all updated pages
+        for (Page p : updatedPagesList) {
             PageId pid = p.getId();
+            // Make place for updated page if necessary
             if (!bufferPages.containsKey(pid) && bufferPages.size() == maxNumPages){
                 evictPage();
             }
+            // insert page and set it as dirty
             bufferPages.put(pid, p);
             bufferPages.get(pid).markDirty(true, tid);
-        }*/
+        }
     }
 
     /**
@@ -185,14 +187,19 @@ public class BufferPool {
         throws DbException, IOException, TransactionAbortedException {
         // some code goes here
         // not necessary for lab1
-        /*DbFile f = Database.getCatalog().getDatabaseFile(t.getRecordId().getPageId().getTableId());
-        ArrayList<Page> dpList = f.deleteTuple(tid, t);
-        for (Page p : dpList) {
+        // Delete tuple from table (the method returns a list of the modified pages)
+        ArrayList<Page> updatedPagesList = Database.getCatalog().getDatabaseFile(t.getRecordId().getPageId().getTableId()).deleteTuple(tid, t);
+        // replacing any existing versions of those pages in the list
+        for (Page p : updatedPagesList) {
             PageId pid = p.getId();
-            if (!bufferPages.containsKey(pid) && bufferPages.size() == maxNumPages) evictPage();
+            // Make place for updated page if necessary
+            if (!bufferPages.containsKey(pid) && bufferPages.size() == maxNumPages){
+                evictPage();
+            }
+            // insert page and set it as dirty
             bufferPages.put(pid, p);
             bufferPages.get(pid).markDirty(true, tid);
-        }*/
+        }
     }
 
     /**
