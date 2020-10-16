@@ -158,14 +158,14 @@ public class BufferPool {
         // add tuple from table (the method returns a list of the modified pages)
         ArrayList<Page> updatedPagesList = Database.getCatalog().getDatabaseFile(tableId).insertTuple(tid, t);
         // Update BP wth all updated pages
-        for (Page p : updatedPagesList) {
-            PageId pid = p.getId();
+        for (Page page : updatedPagesList) {
+            PageId pid = page.getId();
             // Make place for updated page if necessary
             if (!bufferPages.containsKey(pid) && bufferPages.size() == maxNumPages){
                 evictPage();
             }
             // insert page and set it as dirty
-            bufferPages.put(pid, p);
+            bufferPages.put(pid, page);
             bufferPages.get(pid).markDirty(true, tid);
         }
     }
@@ -260,15 +260,25 @@ public class BufferPool {
     private synchronized  void evictPage() throws DbException{
         // some code goes here
         // not necessary for lab1
-        // Only method that delete pages from BP. Before deleting it it flush the page to the Disk if dirty
-        // For now randomly select the first page of the list
-        PageId remId = bufferPages.entrySet().iterator().next().getKey();
-        try {
-            flushPage(remId);
-            discardPage(remId);
-        } catch (IOException e) {
-            e.printStackTrace();
+        // Only method that delete pages from BP
+        // Take the first non used page (non used mean non dirty or not updated after being fetched form disk)
+        PageId nonUsedPage = null;
+        for (PageId pid : bufferPages.keySet()) {
+            if (bufferPages.get(pid).isDirty() == null) {
+                nonUsedPage = pid;
+                break;
+            }
         }
+        // if all pages are dirty (never happen but just in case) flush all pages and take the first
+        if(nonUsedPage == null){
+            try {
+                flushAllPages();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            nonUsedPage = bufferPages.entrySet().iterator().next().getKey();
+        }
+        discardPage(nonUsedPage);
     }
 
 }
