@@ -27,11 +27,10 @@ public class Insert extends Operator {
      *             if TupleDesc of child differs from table into which we are to
      *             insert.
      */
-    public Insert(TransactionId t,DbIterator child, int tableId)
-            throws DbException {
+    public Insert(TransactionId t,DbIterator child, int tableId) throws DbException {
         // some code goes here
-        if (child == null || !child.getTupleDesc().equals(Database.getCatalog().getTupleDesc(tableid)))
-            throw new DbException("TupleDesc does not match.");
+        /*if (child == null || !child.getTupleDesc().equals(Database.getCatalog().getTupleDesc(tableid)))
+            throw new DbException("TupleDesc does not match.");*/
         this.child = child;
         this.tid = t;
         this.tableid = tableid;

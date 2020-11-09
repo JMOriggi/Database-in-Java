@@ -43,7 +43,7 @@ public class Delete extends Operator {
 
     public void open() throws DbException, TransactionAbortedException {
         // some code goes here
-        if (child == null) throw new DbException("Child is null");
+        //if (child == null) throw new DbException("Child is null");
         child.open();
         super.open();
         count = 0;

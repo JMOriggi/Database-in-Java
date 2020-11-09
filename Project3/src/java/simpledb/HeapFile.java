@@ -92,6 +92,11 @@ public class HeapFile implements DbFile {
     public void writePage(Page page) throws IOException {
         // some code goes here
         // not necessary for lab1
+        assert page instanceof HeapPage : "Write non-heap page to a heap file.";
+        RandomAccessFile raf = new RandomAccessFile(f, "rw");
+        raf.seek(BufferPool.getPageSize() * page.getId().pageNumber());
+        raf.write(page.getPageData());
+        raf.close();
     }
 
     /**
@@ -105,8 +110,7 @@ public class HeapFile implements DbFile {
     }
 
     // see DbFile.java for javadocs
-    public ArrayList<Page> insertTuple(TransactionId tid, Tuple t)
-            throws DbException, IOException, TransactionAbortedException {
+    public ArrayList<Page> insertTuple(TransactionId tid, Tuple t) throws DbException, IOException, TransactionAbortedException {
         // some code goes here
         if (!td.equals(t.getTupleDesc())) throw new DbException("TupleDesc does not match.");
         int i = 0;

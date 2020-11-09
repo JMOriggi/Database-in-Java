@@ -18,9 +18,11 @@ public class HeapPage implements Page {
     final byte header[];
     final Tuple tuples[];
     final int numSlots;
+    TransactionId tid; /*NEW VAR*/
 
     byte[] oldData;
     private final Byte oldDataLock=new Byte((byte)0);
+
 
     /**
      * Create a HeapPage from a set of bytes of data read from disk.
@@ -283,7 +285,8 @@ public class HeapPage implements Page {
      */
     public void markDirty(boolean dirty, TransactionId tid) {
         // some code goes here
-	// not necessary for lab1
+	    // not necessary for lab1
+        this.tid = (dirty) ? tid : null;
     }
 
     /**
@@ -291,8 +294,8 @@ public class HeapPage implements Page {
      */
     public TransactionId isDirty() {
         // some code goes here
-	// Not necessary for lab1
-        return null;      
+	    // Not necessary for lab1
+        return tid;
     }
 
     /**
@@ -334,6 +337,10 @@ public class HeapPage implements Page {
     private void markSlotUsed(int i, boolean value) {
         // some code goes here
         // not necessary for lab1
+        int index = i / 8;
+        int offset = i % 8;
+        if (value) header[index] |= (1 << offset);
+        else header[index] &= (~(1 << offset));
     }
 
     /**

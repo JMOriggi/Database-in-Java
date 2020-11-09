@@ -48,8 +48,7 @@ public class InsertTest extends TestUtil.CreateHeapFile {
   @Test public void getNext() throws Exception {
     Insert op = new Insert(tid,scan1, empty.getId());
     op.open();
-    assertTrue(TestUtil.compareTuples(
-        Utility.getHeapTuple(7, 1), // the length of scan1
+    assertTrue(TestUtil.compareTuples( Utility.getHeapTuple(7, 1), // the length of scan1
         op.next()));
 
     // we should fit on one page
