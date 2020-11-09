@@ -111,7 +111,21 @@
       <option name="project" value="LOCAL" />
       <updated>1602738938087</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="All tests ok !!!!!!!!!">
+      <created>1602821778865</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1602821778865</updated>
+    </task>
+    <task id="LOCAL-00007" summary="All tests ok !!!!!!!!!">
+      <created>1602821811063</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1602821811063</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -130,12 +144,13 @@
     <MESSAGE value="project2" />
     <MESSAGE value="update project 2" />
     <MESSAGE value="update bug fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="update bug fix" />
+    <MESSAGE value="All tests ok !!!!!!!!!" />
+    <option name="LAST_COMMIT_MESSAGE" value="All tests ok !!!!!!!!!" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="549" y="167" key="FileChooserDialogImpl" timestamp="1602801352398">
+    <state x="549" y="167" key="FileChooserDialogImpl" timestamp="1602867263336">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1602801352398" />
+    <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1602867263336" />
   </component>
 </project>

@@ -262,23 +262,23 @@ public class BufferPool {
         // not necessary for lab1
         // Only method that delete pages from BP
         // Take the first non used page (non used mean non dirty or not updated after being fetched form disk)
-        PageId nonUsedPage = null;
+        PageId notUsedPage = null;
         for (PageId pid : bufferPages.keySet()) {
             if (bufferPages.get(pid).isDirty() == null) {
-                nonUsedPage = pid;
+                notUsedPage = pid;
                 break;
             }
         }
         // if all pages are dirty (never happen but just in case) flush all pages and take the first
-        if(nonUsedPage == null){
+        if(notUsedPage == null){
             try {
                 flushAllPages();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            nonUsedPage = bufferPages.entrySet().iterator().next().getKey();
+            notUsedPage = bufferPages.entrySet().iterator().next().getKey();
         }
-        discardPage(nonUsedPage);
+        discardPage(notUsedPage);
     }
 
 }
