@@ -146,7 +146,14 @@
       <option name="project" value="LOCAL" />
       <updated>1604883523323</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="p3 update">
+      <created>1604945550906</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1604945550906</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -169,12 +176,13 @@
     <MESSAGE value="p3" />
     <MESSAGE value="project 3 up" />
     <MESSAGE value="project 3 up doc" />
-    <option name="LAST_COMMIT_MESSAGE" value="project 3 up doc" />
+    <MESSAGE value="p3 update" />
+    <option name="LAST_COMMIT_MESSAGE" value="p3 update" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="549" y="167" key="FileChooserDialogImpl" timestamp="1604939785192">
+    <state x="549" y="167" key="FileChooserDialogImpl" timestamp="1605110059196">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1604939785192" />
+    <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1605110059196" />
   </component>
 </project>

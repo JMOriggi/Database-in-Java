@@ -33,7 +33,7 @@ public class Insert extends Operator {
             throw new DbException("TupleDesc does not match.");*/
         this.child = child;
         this.tid = t;
-        this.tableid = tableid;
+        this.tableid = tableId;
         count = 0;
         called = false;
     }

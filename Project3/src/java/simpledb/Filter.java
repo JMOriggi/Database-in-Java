@@ -39,9 +39,8 @@ public class Filter extends Operator {
     public void open() throws DbException, NoSuchElementException,
             TransactionAbortedException {
         // some code goes here
-        if (child == null) throw new NoSuchElementException("Child is null.");
-        child.open();
         super.open();
+        child.open();
     }
 
     public void close() {
@@ -67,10 +66,11 @@ public class Filter extends Operator {
     protected Tuple fetchNext() throws NoSuchElementException,
             TransactionAbortedException, DbException {
         // some code goes here
-        if (child == null) return null;
         while (child.hasNext()) {
-            Tuple t = child.next();
-            if (p.filter(t)) return t;
+            Tuple tuple = child.next();
+            if (p.filter(tuple)) {
+                return tuple;
+            }
         }
         return null;
     }
@@ -78,9 +78,7 @@ public class Filter extends Operator {
     @Override
     public DbIterator[] getChildren() {
         // some code goes here
-        DbIterator[] children = new DbIterator[1];
-        children[0] = child;
-        return children;
+        return new DbIterator[]{child};
     }
 
     @Override

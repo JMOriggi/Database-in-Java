@@ -116,12 +116,10 @@ public class HeapFile implements DbFile {
         int i = 0;
         HeapPage hp = null;
         for (i = 0; i < numPages(); i ++) {
-            if (((HeapPage)(Database.getBufferPool().getPage(
-                    tid, new HeapPageId(tableId, i), Permissions.READ_ONLY))).getNumEmptySlots() > 0)
+            if (((HeapPage)(Database.getBufferPool().getPage(tid, new HeapPageId(tableId, i), Permissions.READ_ONLY))).getNumEmptySlots() > 0)
                 break;
         }
         if (i == numPages()) {
-            //System.out.println("Shit");
             synchronized(this) {
                 i = numPages();
                 // All files are full
@@ -141,7 +139,6 @@ public class HeapFile implements DbFile {
         }
         hp = (HeapPage)(Database.getBufferPool().getPage(tid, new HeapPageId(tableId, i), Permissions.READ_WRITE));
         hp.insertTuple(t);
-        //System.out.println("Tid is" + tid.toString() + " Insert Tuple is" + ((IntField)(t.getField(0))).getValue());
         ArrayList<Page> pList = new ArrayList<Page>();
         pList.add(hp);
         return pList;
@@ -151,15 +148,28 @@ public class HeapFile implements DbFile {
     public ArrayList<Page> deleteTuple(TransactionId tid, Tuple t) throws DbException,
             TransactionAbortedException {
         // some code goes here
-        if (tableId != t.getRecordId().getPageId().getTableId()) throw new DbException("Table Id does not match.");
+        /*if (tableId != t.getRecordId().getPageId().getTableId()) throw new DbException("Table Id does not match.");
         int pageno = t.getRecordId().getPageId().pageNumber();
         if (pageno < 0 || pageno >= numPages()) throw new DbException("Page number is illegal.");
         HeapPage hp = (HeapPage)(Database.getBufferPool().getPage(tid, t.getRecordId().getPageId(), Permissions.READ_WRITE));
         hp.deleteTuple(t);
-        //System.out.println("Tid is" + tid.toString() + " Delete Tuple is" + ((IntField)(t.getField(0))).getValue());
         ArrayList<Page> pList = new ArrayList<Page>();
         pList.add(hp);
+        return pList;*/
+        PageId pid = t.getRecordId().getPageId();
+        HeapPage page = (HeapPage) Database.getBufferPool().getPage(tid, pid, Permissions.READ_WRITE);
+        page.deleteTuple(t);
+        ArrayList<Page> pList = new ArrayList<Page>();
+        pList.add(page);
         return pList;
+        /*if (t.getRecordId() == null) {
+            throw new DbException("Heap file delete tuple, record id is null");
+        }
+        PageId pageId = t.getRecordId().getPageId();
+        HeapPage page = (HeapPage) Database.getBufferPool().getPage(tid, pageId, Permissions.READ_WRITE);
+        page.deleteTuple(t);
+        return new ArrayList<Page>(Arrays.asList(page));
+        */
     }
 
     // see DbFile.java for javadocs
