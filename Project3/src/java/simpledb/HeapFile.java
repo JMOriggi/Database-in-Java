@@ -55,7 +55,6 @@ public class HeapFile implements DbFile {
     public int getId() {
         // some code goes here
         return this.id;
-        //throw new UnsupportedOperationException("implement this");
     }
 
     /**
@@ -66,7 +65,6 @@ public class HeapFile implements DbFile {
     public TupleDesc getTupleDesc() {
         // some code goes here
         return this.td;
-        //throw new UnsupportedOperationException("implement this");
     }
 
     // see DbFile.java for javadocs
