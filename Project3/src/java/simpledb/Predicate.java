@@ -9,10 +9,9 @@ public class Predicate implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private int fieldNo;
-    private Op op;
-    private Field operand;
-
+    private int m_field;
+    private Op m_op;
+    private Field m_operand;
     /** Constants used for return codes in Field.compare */
     public enum Op implements Serializable {
         EQUALS, GREATER_THAN, LESS_THAN, LESS_THAN_OR_EQ, GREATER_THAN_OR_EQ, LIKE, NOT_EQUALS;
@@ -59,10 +58,10 @@ public class Predicate implements Serializable {
      *            field value to compare passed in tuples to
      */
     public Predicate(int field, Op op, Field operand) {
+    	m_field = field;
+    	m_op = op;
+    	m_operand = operand;
         // some code goes here
-        fieldNo = field;
-        this.op = op;
-        this.operand = operand;
     }
 
     /**
@@ -71,7 +70,7 @@ public class Predicate implements Serializable {
     public int getField()
     {
         // some code goes here
-        return fieldNo;
+        return m_field;
     }
 
     /**
@@ -80,7 +79,7 @@ public class Predicate implements Serializable {
     public Op getOp()
     {
         // some code goes here
-        return op;
+        return m_op;
     }
     
     /**
@@ -89,7 +88,7 @@ public class Predicate implements Serializable {
     public Field getOperand()
     {
         // some code goes here
-        return operand;
+        return m_operand;
     }
     
     /**
@@ -104,8 +103,8 @@ public class Predicate implements Serializable {
      */
     public boolean filter(Tuple t) {
         // some code goes here
-        if (t == null) return false;
-        return t.getField(fieldNo).compare(op, operand);
+    	Field tuple_field = t.getField(getField());
+    	return tuple_field.compare(getOp(), m_operand);
     }
 
     /**
@@ -114,6 +113,6 @@ public class Predicate implements Serializable {
      */
     public String toString() {
         // some code goes here
-        return "f = " + fieldNo + " op = " + op.toString() + " operand = " + operand.toString();
+        return "f = " + m_field + " op = " + m_op.toString() + " operand = " + m_operand;
     }
 }

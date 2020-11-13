@@ -76,8 +76,6 @@ public class IntegerAggregator implements Aggregator {
                 vList.set(index, v + v_prev);
                 cList.set(index, c_prev + 1);
                 break;
-            default:
-                assert false : "Unsupported Aggregator.Op in lab2.";
         }
     }
 
@@ -91,8 +89,6 @@ public class IntegerAggregator implements Aggregator {
      */
     public DbIterator iterator() {
         // some code goes here
-        /*throw new
-        UnsupportedOperationException("please implement me for lab3");*/
         ArrayList<Tuple> tList = new ArrayList<Tuple>();
         TupleDesc td = null;
         if (gbfield == NO_GROUPING) {
@@ -113,8 +109,6 @@ public class IntegerAggregator implements Aggregator {
                 case AVG:
                     v = vList.get(0)/cList.get(0);
                     break;
-                default:
-                    assert false : "Unsupported Aggregator.Op in lab2.";
             }
             t.setField(0, new IntField(v));
             tList.add(t);
@@ -138,8 +132,6 @@ public class IntegerAggregator implements Aggregator {
                     case AVG:
                         v = vList.get(i)/cList.get(i);
                         break;
-                    default:
-                        assert false : "Unsupported Aggregator.Op in lab2.";
                 }
                 t.setField(0, gbFieldList.get(i));
                 t.setField(1, new IntField(v));

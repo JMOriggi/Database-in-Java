@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class BufferPool {
     /** Bytes per page, including header. */
-    private static final int PAGE_SIZE = 4096;
+    static final int PAGE_SIZE = 4096;
 
     private static int pageSize = PAGE_SIZE;
     
@@ -164,9 +164,8 @@ public class BufferPool {
             if (!bufferPages.containsKey(pid) && bufferPages.size() == maxNumPages){
                 evictPage();
             }
-            // insert page and set it as dirty
-            bufferPages.put(pid, page);
-            bufferPages.get(pid).markDirty(true, tid);
+            page.markDirty(true, tid);
+            bufferPages.put(page.getId(), page);
         }
     }
 
@@ -195,11 +194,9 @@ public class BufferPool {
             // Make place for updated page if necessary
             if (!bufferPages.containsKey(pid) && bufferPages.size() == maxNumPages){
                 evictPage();
-                System.out.println("EVICTION PAGE");
             }
-            // insert page and set it as dirty
-            bufferPages.put(pid, p);
-            bufferPages.get(pid).markDirty(true, tid);
+            p.markDirty(true, tid);
+            bufferPages.put(p.getId(), p);
         }
     }
 

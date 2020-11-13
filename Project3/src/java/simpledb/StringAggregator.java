@@ -99,8 +99,6 @@ public class StringAggregator implements Aggregator {
                     case COUNT:
                         v = cList.get(i);
                         break;
-                    default:
-                        assert false : "Unsupported Aggregator.Op in lab2.";
                 }
                 t.setField(0, gbFieldList.get(i));
                 t.setField(1, new IntField(v));

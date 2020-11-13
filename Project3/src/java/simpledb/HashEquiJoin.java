@@ -127,7 +127,7 @@ public class HashEquiJoin extends Operator {
      * @see JoinPredicate#filter
      */
     /*ADDED*/
-    private Tuple processList() throws TransactionAbortedException, DbException {
+    private Tuple mergeList() throws TransactionAbortedException, DbException {
         t1 = listIt.next();
 
         int td1n = t1.getTupleDesc().numFields();
@@ -146,7 +146,7 @@ public class HashEquiJoin extends Operator {
     protected Tuple fetchNext() throws TransactionAbortedException, DbException {
         // some code goes here
         if (listIt != null && listIt.hasNext()) {
-            return processList();
+            return mergeList();
         }
 
         // loop around child2
@@ -160,7 +160,7 @@ public class HashEquiJoin extends Operator {
                 continue;
             listIt = l.iterator();
 
-            return processList();
+            return mergeList();
 
         }
 

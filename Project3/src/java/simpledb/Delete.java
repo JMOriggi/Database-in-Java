@@ -12,9 +12,10 @@ public class Delete extends Operator {
 
 
 
-    private TransactionId tid;
-    private DbIterator iterator;
-    private boolean calledOnce = false;
+    private TransactionId m_transactionId;
+    private DbIterator m_it;
+    private TupleDesc m_resultTupleDesc;
+    private boolean m_deleted;
 
 
     /**
@@ -28,30 +29,36 @@ public class Delete extends Operator {
      */
     public Delete(TransactionId t, DbIterator child) {
         // some code goes here
-        this.tid = t;
-        this.iterator = child;
+        m_transactionId = t;
+        m_it = child;
+        m_deleted = false;
+
+        String[] names = new String[] {"Deleted"};
+        Type[] types = new Type[] {Type.INT_TYPE};
+        m_resultTupleDesc = new TupleDesc(types, names);
     }
 
     public TupleDesc getTupleDesc() {
         // some code goes here
-        return iterator.getTupleDesc();
+        return m_resultTupleDesc;
     }
 
     public void open() throws DbException, TransactionAbortedException {
         // some code goes here
-        iterator.open();
         super.open();
+        m_it.open();
+        m_deleted = false;
     }
 
     public void close() {
         // some code goes here
         super.close();
-        iterator.close();
+        m_it.close();
     }
 
     public void rewind() throws DbException, TransactionAbortedException {
         // some code goes here
-        iterator.rewind();
+        m_it.rewind();
     }
 
     /**
@@ -65,35 +72,37 @@ public class Delete extends Operator {
      */
     protected Tuple fetchNext() throws TransactionAbortedException, DbException {
         // some code goes here
-        if(calledOnce)
-            return null;
-        calledOnce = true;
-        int nTuplesDeleted = 0;
-        BufferPool buffer = Database.getBufferPool();
-        while(iterator.hasNext()){
-            Tuple tuple = iterator.next();
-            try {
-                buffer.deleteTuple(tid, tuple);
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (m_deleted) return null;
+        int deletedCount = 0;
+        while (m_it.hasNext())
+        {
+            Tuple tup = m_it.next();
+            try
+            {
+                Database.getBufferPool().deleteTuple(m_transactionId, tup);
             }
-            nTuplesDeleted++;
+            catch (IOException e)
+            {
+                throw new DbException("IO Exception on tuple deletion");
+            }
+            deletedCount++;
         }
-        Tuple tuple = new Tuple(new TupleDesc(new Type[]{Type.INT_TYPE}));
-        tuple.setField(0, new IntField(nTuplesDeleted));
-        return tuple;
+        Tuple resultTuple = new Tuple(m_resultTupleDesc);
+        resultTuple.setField(0, new IntField(deletedCount));
+        m_deleted = true;
+        return resultTuple;
     }
 
     @Override
     public DbIterator[] getChildren() {
         // some code goes here
-        return new DbIterator[]{iterator};
+        return new DbIterator[] {m_it};
     }
 
     @Override
     public void setChildren(DbIterator[] children) {
         // some code goes here
-        iterator = children[0];
+        m_it = children[0];
     }
 
 }
