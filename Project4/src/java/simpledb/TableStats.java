@@ -243,25 +243,21 @@ public class TableStats {
      *         predicate
      */
     public double estimateSelectivity(int field, Predicate.Op op, Field constant) {
+        // some code goes here
         if (histograms != null) {
             if (td.getFieldType(field) == Type.INT_TYPE) {
                 IntHistogram hist = (IntHistogram) histograms[field];
                 double sel = hist.estimateSelectivity(op,
                         ((IntField) constant).getValue());
-//                System.out.println("SELECTIVITY OF PREDICATE " + field + " "
-//                        + op + " " + constant + " IS " + sel);
                 return sel;
             } else {
                 StringHistogram hist = (StringHistogram) histograms[field];
                 double sel = hist.estimateSelectivity(op,
                         ((StringField) constant).getValue());
-//                System.out.println("SELECTIVITY OF PREDICATE " + field + " "
-//                        + op + " " + constant + " IS " + sel);
-
                 return sel;
             }
         }
-        return 1.0; // make something up.
+        return 1.0;
     }
 
     /**

@@ -237,7 +237,7 @@ public class JoinOptimizer {
         PlanCache cache = new PlanCache();
         Set<LogicalJoinNode> hash = new HashSet<LogicalJoinNode>(joins);
         Set<Set<LogicalJoinNode>> join = enumerateSubsets(joins,1);
-        // Literally going through each JoinNode and computing the Cost and Card of Subplan through nested loops
+        // Lgoing through each JoinNode and computing the Cost and Card of Subplan through nested loops
         for (int i=0;i<=join.size();++i){
             for (Set<LogicalJoinNode> set : enumerateSubsets(joins,i)) {
                 CostCard best = new CostCard();
