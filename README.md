@@ -11,3 +11,5 @@ Aggregator operations.
 
 Project 4
 Queries
+
+Additional Mongo db try queries
