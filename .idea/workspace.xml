@@ -21,7 +21,6 @@
   <component name="ChangeListManager">
     <list default="true" id="a8665d79-328e-4ddb-b0b6-cf135f53e7bf" name="Default Changelist" comment="project 3 up doc">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project4/log" beforeDir="false" afterPath="$PROJECT_DIR$/Project4/log" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -182,7 +181,14 @@
       <option name="project" value="LOCAL" />
       <updated>1605552439197</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="PA4 rep">
+      <created>1606274701774</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1606274701774</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -210,12 +216,13 @@
     <MESSAGE value="fix PA3" />
     <MESSAGE value="fix Btree PA3" />
     <MESSAGE value="PA4" />
-    <option name="LAST_COMMIT_MESSAGE" value="PA4" />
+    <MESSAGE value="PA4 rep" />
+    <option name="LAST_COMMIT_MESSAGE" value="PA4 rep" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="549" y="167" key="FileChooserDialogImpl" timestamp="1605732774334">
+    <state x="549" y="167" key="FileChooserDialogImpl" timestamp="1606872602972">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1605732774334" />
+    <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1606872602972" />
   </component>
 </project>
