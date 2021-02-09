@@ -6,6 +6,7 @@ SimpleDB is a multi-user transactional database server written in Java, which in
 
 Project 1
 Basic SimpleDB structure with Heap file access method, and seqScan operator.
+![Alt text](/DBMS Schema P1.pdf ) 
 
 Project 2
 Implement a B+Tree indexing to organize data. With indexing we are dealing with the disck for minimizing the I/O.
