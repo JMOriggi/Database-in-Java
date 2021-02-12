@@ -6,6 +6,10 @@ SimpleDB is a multi-user transactional database server written in Java, which in
 
 SimpleDB is a very simple implementation of a Relational DBMS, an often suited only for educational purpose
 
+## Documentation
+You can find entire JavaDoc at https://hrily.github.io/SimpleDB
+
+## Projects
 ### Project 1
 Basic SimpleDB structure with Heap file access method, and seqScan operator.
 ![Alt text](/Schema1.JPG ) 
