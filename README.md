@@ -2,20 +2,23 @@
 
 A database implementation in Java.
 
-SimpleDB is a multi-user transactional database server written in Java, which interacts with Java client programs via JDBC. SimpleDB uses the Ant build tool to compile the code and run tests. Ant is similar to make, but the build file is written in XML and is somewhat better suited to Java code. Most modern Linux distributions include Ant.
+SimpleDB is a multi-user transactional database server written in Java, which interacts with Java client programs via JDBC. SimpleDB uses the Ant build tool to compile the code and run tests. Ant is similar to make, but the build file is written in XML and is somewhat better suited to Java code. Most modern Linux distributions include Ant. 
+
+SimpleDB is a very simple implementation of a Relational DBMS, an often suited only for educational purpose
 
 Project 1
 Basic SimpleDB structure with Heap file access method, and seqScan operator.
 ![Alt text](/DBMS Schema P1.pdf ) 
 
 Project 2
-Implement a B+Tree indexing to organize data. With indexing we are dealing with the disck for minimizing the I/O.
+Implement a more complex indexing method using B+Trees to organize data. 
+![Alt text](/DBMS Schema P2.pdf ) 
 
 Project 3
 Aggregator operations.
 
 Project 4
-Queries
+Queries.
 
 MongoDB
 -------------
