@@ -12,11 +12,11 @@ You can find entire JavaDoc at https://hrily.github.io/SimpleDB
 ## Projects
 ### Project 1
 Basic SimpleDB structure with Heap file access method, and seqScan operator.
-![Alt text](/Schema1.JPG ) 
+![Alt text](/git-docs/Schema1.JPG ) 
 
 ### Project 2
 Implement a more complex indexing method using B+Trees to organize data. 
-![Alt text](/Schema2.JPG )
+![Alt text](/git-docs/Schema2.JPG )
 
 ### Project 3
 Aggregator operations.
