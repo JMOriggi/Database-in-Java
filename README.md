@@ -8,11 +8,11 @@ SimpleDB is a very simple implementation of a Relational DBMS, an often suited o
 
 Project 1
 Basic SimpleDB structure with Heap file access method, and seqScan operator.
-![Alt text](/DBMS Schema P1.JPG ) 
+![Alt text](/Schema1.JPG ) 
 
 Project 2
 Implement a more complex indexing method using B+Trees to organize data. 
-![Alt text](/DBMS Schema P2.JPG )
+![Alt text](/Schema2.JPG )
 
 Project 3
 Aggregator operations.
