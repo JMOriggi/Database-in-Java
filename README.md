@@ -6,20 +6,19 @@ SimpleDB is a multi-user transactional database server written in Java, which in
 
 SimpleDB is a very simple implementation of a Relational DBMS, an often suited only for educational purpose
 
-## Project 1
+### Project 1
 Basic SimpleDB structure with Heap file access method, and seqScan operator.
 ![Alt text](/Schema1.JPG ) 
 
-## Project 2
+### Project 2
 Implement a more complex indexing method using B+Trees to organize data. 
 ![Alt text](/Schema2.JPG )
 
-## Project 3
+### Project 3
 Aggregator operations.
 
-## Project 4
+### Project 4
 Queries.
 
-MongoDB
--------------
+# MongoDB
 Additional Mongo db query test file in JS.
