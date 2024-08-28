@@ -1,4 +1,4 @@
-# SimpleDB 
+# Database Server in Java 
 
 A database implementation in Java.
 
